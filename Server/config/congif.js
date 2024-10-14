@@ -11,6 +11,10 @@ const config = {
     jwt: {
         secret: process.env.JWT_SECRET,
     },
+    nodemailer: {
+        email: process.env.EMAIL_USER,
+        password: process.env.EMAIL_PASS,
+    },
 
 }
 

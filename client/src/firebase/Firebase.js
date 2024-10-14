@@ -14,6 +14,6 @@ const firebaseConfig = {
     appId: env.firebase.appId
 };
 // console.log(env)
-console.log(firebaseConfig)
+// console.log(firebaseConfig)
 // Initialize Firebase
 export const FireBaseapp = initializeApp(firebaseConfig);

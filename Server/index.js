@@ -4,10 +4,22 @@ import config from "./config/congif.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 import userRouter from "./routes/user.routes.js";
 import authRouter from "./routes/auth.route.js";
+import userAuthMiddleware from "./middleware/auth.middleware.js";
+import logMiddleware from "./middleware/admin.log.middleware.js";
+import adminLogRouter from "./routes/admin.log.route.js";
 
+
+
+app.get("/", userAuthMiddleware, (req, res) => {
+    res.json({
+        message: "Hello World"
+    })
+});
+app.use(logMiddleware);
 //========= V1 Routes=========================
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/admin/log", adminLogRouter);
 
 //==================Error Middleware===================
 app.use(errorMiddleware);

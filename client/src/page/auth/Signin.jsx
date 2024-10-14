@@ -98,6 +98,9 @@ const Signin = () => {
             Don&apos;t have an account?{' '}
             <Link to="/signup" className="font-medium text-blue-300 hover:text-blue-400">Sign up</Link>
           </p>
+          <p className="text-center text-sm text-gray-400">
+            <Link to="/forget-password" className="font-medium text-blue-300 hover:text-blue-400">Forget password?</Link>
+          </p>
         </div>
         {error && (
           <motion.div
