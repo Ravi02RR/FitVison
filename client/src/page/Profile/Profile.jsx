@@ -1,23 +1,23 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { UserCircle, Mail, Key, Calendar, MapPin, Heart, Apple, Flag, Activity, Edit } from 'lucide-react';
+import { UserCircle, Mail, Key, Calendar, MapPin, Heart, Apple, Flag, Activity, Edit, User, Weight, Target, Utensils, AlertTriangle, Moon, Droplet, Coffee } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// eslint-disable-next-line react/prop-types
-const ProfileField = ({ icon: Icon, label, value }) => (
-    <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-        <dt className="text-sm font-medium text-blue-300 flex items-center">
-            <Icon className="mr-2" size={20} />
-            {label}
-        </dt>
-        <dd className="mt-1 text-sm text-blue-300 sm:mt-0 sm:col-span-2">
-            {value || 'Not specified'}
-        </dd>
-    </div>
+const ProfileCard = ({ icon: Icon, label, value, color }) => (
+    <motion.div
+        className={`bg-gray-800 p-6 rounded-xl shadow-lg ${color} flex flex-col items-center justify-center text-center`}
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: "spring", stiffness: 300 }}
+    >
+        <Icon size={48} className="mb-4" />
+        <h3 className="text-xl font-semibold mb-2">{label}</h3>
+        <p className="text-2xl font-bold">{value || 'Not specified'}</p>
+    </motion.div>
 );
 
-const Profile = () => {
+const BeautifulProfile = () => {
     const user = useSelector((state) => state.user.user);
     const navigate = useNavigate();
     const [localData, setLocalData] = useState(null);
@@ -30,7 +30,7 @@ const Profile = () => {
     }, []);
 
     if (!user) {
-        return <div className="min-h-screen bg-gradient-to-b from-gray-900 to-blue-900 flex justify-center items-center text-white">Loading...</div>;
+        return <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 flex justify-center items-center text-white text-3xl">Loading...</div>;
     }
 
     const handleEditClick = () => {
@@ -38,49 +38,60 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-blue-900 flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-            <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="w-full max-w-3xl bg-gray-800 rounded-lg shadow-xl overflow-hidden"
-            >
-                <div className="px-4 py-5 sm:px-6 bg-indigo-600 flex justify-between items-center">
-                    <h3 className="text-2xl leading-6 font-bold text-white">User Profile</h3>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleEditClick}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition duration-300 flex items-center"
-                    >
-                        <Edit className="mr-2" size={18} />
-                        Edit Profile
-                    </motion.button>
-                </div>
-                <div className="border-t border-gray-700">
-                    <dl className="divide-y divide-gray-700">
-                        <ProfileField icon={UserCircle} label="Name" value={user.name} />
-                        <ProfileField icon={Mail} label="Email" value={user.email} />
-                        <ProfileField icon={Key} label="User ID" value={user.id} />
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="bg-gray-800 rounded-3xl shadow-2xl overflow-hidden mb-8"
+                >
+                    <div className="px-6 py-8 sm:px-10 bg-indigo-600 flex justify-between items-center">
+                        <h1 className="text-4xl font-bold text-white">User Profile </h1>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleEditClick}
+                            className="bg-blue-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-blue-600 transition duration-300 flex items-center text-lg font-semibold"
+                        >
+                            <Edit className="mr-2" size={24} />
+                            Edit Profile
+                        </motion.button>
+                    </div>
+
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8">
+                        <ProfileCard icon={UserCircle} label="Name" value={user.name} color="text-white" />
+                        <ProfileCard icon={Mail} label="Email" value={user.email} color="text-white" />
+                        <ProfileCard icon={Key} label="User ID" value={user.id} color="text-white" />
+
                         {localData && (
+
+
                             <>
-                                <ProfileField icon={Calendar} label="Age" value={localData.age} />
-                                <ProfileField icon={Activity} label="Height" value={localData.height && `${localData.height} cm`} />
-                                <ProfileField icon={Activity} label="Weight" value={localData.weight && `${localData.weight} kg`} />
-                                <ProfileField icon={Heart} label="Goal" value={localData.goal} />
-                                <ProfileField icon={Apple} label="Diet Type" value={localData.dietType} />
-                                <ProfileField icon={Flag} label="Nationality" value={localData.nationality} />
-                                <ProfileField icon={MapPin} label="Location" value={localData.location} />
-                                <ProfileField icon={Apple} label="Preferred Food" value={localData.preferredFood} />
-                                <ProfileField icon={Heart} label="Allergies" value={localData.allergies} />
-                                <ProfileField icon={Activity} label="Activity Level" value={localData.activityLevel} />
+                                <ProfileCard icon={Calendar} label="Age" value={`${localData.age} years`} color="text-yellow-400" />
+                                <ProfileCard icon={User} label="Gender" value={localData.gender} color="text-pink-400" />
+                                <ProfileCard icon={Activity} label="Height" value={localData.height && `${localData.height} cm`} color="text-indigo-400" />
+                                <ProfileCard icon={Weight} label="Weight" value={localData.weight && `${localData.weight} kg`} color="text-red-400" />
+                                <ProfileCard icon={Target} label="Goal" value={localData.goal} color="text-orange-400" />
+                                <ProfileCard icon={Utensils} label="Diet Type" value={localData.dietType} color="text-teal-400" />
+                                <ProfileCard icon={Flag} label="Nationality" value={localData.nationality} color="text-blue-400" />
+                                <ProfileCard icon={MapPin} label="Location" value={localData.location} color="text-green-400" />
+                                <ProfileCard icon={Apple} label="Preferred Food" value={localData.preferredFood} color="text-red-400" />
+                                <ProfileCard icon={AlertTriangle} label="Allergies" value={localData.allergies} color="text-yellow-400" />
+                                <ProfileCard icon={Activity} label="Activity Level" value={localData.activityLevel} color="text-blue-400" />
+                                <ProfileCard icon={Moon} label="Sleep Hours" value={`${localData.sleepHours} hours`} color="text-indigo-400" />
+                                <ProfileCard icon={Heart} label="Stress Level" value={localData.stressLevel} color="text-pink-400" />
+                                <ProfileCard icon={Droplet} label="Water Intake" value={`${localData.waterIntake} L`} color="text-blue-400" />
+                                <ProfileCard icon={Coffee} label="Meal Frequency" value={localData.mealFrequency} color="text-brown-400" />
+                                ]
                             </>
                         )}
-                    </dl>
-                </div>
-            </motion.div>
+                    </div>
+                </motion.div>
+            </div>
         </div>
     );
 };
 
-export default Profile;
+export default BeautifulProfile;

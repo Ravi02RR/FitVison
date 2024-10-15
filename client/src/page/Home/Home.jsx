@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { Check, Star, Activity, Heart, Zap, ChefHat, Camera, ChevronRight, Play } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 //const imageLink = "https://stayfitcentral.b-cdn.net/wp-content/uploads/2023/12/DALL%C2%B7E-2024-01-02-14.38.34-A-futuristic-AI-chatbot-named-Endura-designed-as-a-personal-trainer-and-fitness-assistant.-The-chatbot-has-a-sleek-modern-design-with-a-holographic--1400x800.png"
 //const imageLink = "https://gadgetuser.com/wp-content/uploads/2022/07/Atlis-Movement-Home-AI-Personal-Trainer.jpg.webp"
@@ -102,15 +103,17 @@ const HeroSection = () => {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.6, duration: 0.5 }}
                     className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6"
-                >
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition duration-300 flex items-center"
-                    >
-                        Start Your Free Trial
-                        <ChevronRight className="ml-2" size={20} />
-                    </motion.button>
+                ><Link to={'/progress'}>
+
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg transition duration-300 flex items-center"
+                        >
+                            Start Your Free Trial
+                            <ChevronRight className="ml-2" size={20} />
+                        </motion.button>
+                    </Link>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -177,9 +180,9 @@ const FeaturesSection = () => {
 
 const PricingSection = () => {
     const plans = [
-        { name: "Basic", price: "$9.99", features: ["Personalized workout plans", "Basic meal suggestions", "Progress tracking"] },
-        { name: "Pro", price: "$19.99", features: ["Everything in Basic", "Advanced posture analysis", "Nutritionist consultation", "24/7 support"] },
-        { name: "Elite", price: "$29.99", features: ["Everything in Pro", "1-on-1 virtual coaching", "Custom meal prep service", "Premium content access"] },
+        { name: "Basic", price: "₹00", features: ["Personalized workout plans", "Basic meal suggestions", "Progress tracking"], to: '/progress' },
+        { name: "Pro", price: "₹999", features: ["Everything in Basic", "Advanced posture analysis", "Nutritionist consultation", "24/7 support"], to: '/pro' },
+        { name: "Elite", price: "₹2999", features: ["Everything in Pro", "1-on-1 virtual coaching", "Custom meal prep service", "Premium content access"], active: "Comming Soon !" },
     ];
 
     return (
@@ -193,7 +196,7 @@ const PricingSection = () => {
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="bg-gray-800 p-8 rounded-lg text-center"
+                            className="bg-gray-800 p-8 rounded-lg flex flex-col justify-center items-center text-center align-middle"
                         >
                             <h3 className="text-2xl font-bold mb-4">{plan.name}</h3>
                             <p className="text-4xl font-bold text-blue-400 mb-6">{plan.price}<span className="text-lg text-gray-400">/month</span></p>
@@ -205,9 +208,11 @@ const PricingSection = () => {
                                     </li>
                                 ))}
                             </ul>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition duration-300">
-                                Get Started
-                            </button>
+                            <Link to={plan.to}>
+                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition duration-300">
+                                    {plan.active ? plan.active : "Get Started"}
+                                </button>
+                            </Link>
                         </motion.div>
                     ))}
                 </div>
@@ -292,13 +297,13 @@ const CallToAction = () => (
         <div className="max-w-4xl mx-auto text-center px-4">
             <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Fitness Journey?</h2>
             <p className="text-xl mb-8">Join FitVision today and experience the future of personalized fitness.</p>
-            <motion.button
+            <Link to={'/progress'}><motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg transition duration-300 hover:bg-gray-100"
             >
                 Start Your Free Trial Now
-            </motion.button>
+            </motion.button></Link>
         </div>
     </section>
 );

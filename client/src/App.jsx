@@ -1,11 +1,14 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-//============================Components==============================
+import { useSelector } from 'react-redux';
+
+// Components
 import Navbar from './components/NavBar/Navbar';
 import Footer from './components/Footer/Footer';
 import PrivateRoute from './components/Private/PrivateRoute';
+import PublicRoute from './components/Private/PublicRoute';
 
-//==========================elements==========================
+// Pages
 import Home from './page/Home/Home';
 import About from './page/About/About';
 import Signin from './page/auth/Signin';
@@ -15,6 +18,8 @@ import ForgetPassword from './page/auth/ForgetPassword';
 import ResetPassword from './page/auth/ResetPassword';
 import AdminLog from './page/Admin/AdminLog';
 import Setting from './page/Settings/Setting';
+import Progress from './page/Progress/Progress';
+import Pro from './page/Plans/Pro';
 
 function NotFound() {
   return (
@@ -25,6 +30,8 @@ function NotFound() {
 }
 
 function App() {
+  const { user } = useSelector((state) => state.user);
+
   return (
     <>
       <BrowserRouter>
@@ -32,14 +39,42 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/signin" element={<Signin />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/signin"
+            element={
+              <PublicRoute user={user}>
+                <Signin />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute user={user}>
+                <Signup />
+              </PublicRoute>
+            }
+          />
           <Route path="/profile" element={<PrivateRoute element={Profile} />} />
-          <Route path="/forget-password" element={<ForgetPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/forget-password" element=
+            {
+              <PublicRoute user={user}>
+                <ForgetPassword />
+              </PublicRoute>
+
+            } />
+          <Route path="/reset-password/:token" element=
+            {
+              <PublicRoute user={user}>
+                <ResetPassword />
+              </PublicRoute>
+
+            } />
           <Route path="/admin/log" element={<PrivateRoute element={AdminLog} />} />
           <Route path="/settings" element={<PrivateRoute element={Setting} />} />
+          <Route path="/progress" element={<PrivateRoute element={Progress} />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/pro" element={<Pro />} />
         </Routes>
         <Footer />
       </BrowserRouter>
