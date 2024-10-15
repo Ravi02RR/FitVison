@@ -23,6 +23,8 @@ import Pro from './page/Plans/Pro';
 import Paymentsucess from './page/Plans/Paymentsucess';
 import ProRoute from './components/Private/ProRoute';
 import PoseEstimation from './page/PoseEstimation/PoseEstimation';
+import DietPlanner from './page/exerciseanddietplanner/DietPlanner';
+import ExercisePlanner from './page/exerciseanddietplanner/ExercisePlanner';
 
 function NotFound() {
   return (
@@ -87,7 +89,9 @@ function App() {
           <Route path="/admin/log" element={<PrivateRoute element={AdminLog} />} />
           <Route path="/settings" element={<PrivateRoute element={Setting} />} />
           <Route path="/progress" element={<PrivateRoute element={Progress} />} />
+          <Route path="/dietplanner" element={<PrivateRoute element={DietPlanner} />} />
           <Route path="/paymentsuccess" element={<PrivateRoute element={Paymentsucess} />} />
+          <Route path="/exerciseplanner" element={<PrivateRoute element={ExercisePlanner} />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/pro" element={<Pro />} />
 

@@ -9,6 +9,7 @@ import logMiddleware from "./middleware/admin.log.middleware.js";
 import adminLogRouter from "./routes/admin.log.route.js";
 import progressRouter from "./routes/progress.router.js";
 import paymentRouter from "./routes/razorpay.routes.js";
+import plannerRouter from "./routes/planner.routes.js";
 
 
 
@@ -24,6 +25,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin/log", adminLogRouter);
 app.use("/api/v1/progress", userAuthMiddleware, progressRouter);
 app.use("/api/v1/payment", userAuthMiddleware, paymentRouter);
+app.use("/api/v1/planner",userAuthMiddleware, plannerRouter);
 
 //==================Error Middleware===================
 app.use(errorMiddleware);

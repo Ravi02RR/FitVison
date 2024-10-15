@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 const PaymentSuccess = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [countdown, setCountdown] = useState(10);
+
 
     const reference = searchParams.get('reference') || 'N/A';
 
@@ -15,6 +17,8 @@ const PaymentSuccess = () => {
         }, 1000);
 
         const navigationTimer = setTimeout(() => {
+            //set user isPro to true
+
             navigate('/');
         }, 10000);
 

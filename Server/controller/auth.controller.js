@@ -297,3 +297,8 @@ export const resetPassword = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+//============================Logout============================
+export const signout = async (req, res) => {
+    res.clearCookie('access_token').json({ message: "Logged out successfully" });
+};

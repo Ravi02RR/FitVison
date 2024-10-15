@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { Check, Star, Activity, Heart, Zap, ChefHat, Camera, ChevronRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 
 //const imageLink = "https://stayfitcentral.b-cdn.net/wp-content/uploads/2023/12/DALL%C2%B7E-2024-01-02-14.38.34-A-futuristic-AI-chatbot-named-Endura-designed-as-a-personal-trainer-and-fitness-assistant.-The-chatbot-has-a-sleek-modern-design-with-a-holographic--1400x800.png"
 //const imageLink = "https://gadgetuser.com/wp-content/uploads/2022/07/Atlis-Movement-Home-AI-Personal-Trainer.jpg.webp"
@@ -179,11 +181,22 @@ const FeaturesSection = () => {
 };
 
 const PricingSection = () => {
-    
+    const loggedInUser = useSelector((state) => state.user.user);
     const plans = [
         { name: "Basic", price: "₹00", features: ["Personalized workout plans", "Basic meal suggestions", "Progress tracking"], to: '/progress' },
-        { name: "Pro", price: "₹999", features: ["Everything in Basic", "Advanced posture analysis", "Nutritionist consultation", "24/7 support"], to: '/pro' },
-        { name: "Elite", price: "₹2999", features: ["Everything in Pro", "1-on-1 virtual coaching", "Custom meal prep service", "Premium content access"], active: "Comming Soon !" },
+        {
+            name: "Pro",
+            price: loggedInUser?.isPro ? " Subscribed  @₹999" : "₹999",
+            features: ["Everything in Basic", "Advanced posture analysis", "Nutritionist consultation", "24/7 support"],
+            to: loggedInUser?.isPro ? '/pose' : '/pro',
+            buttonText: loggedInUser?.isPro ? 'Subscribed - Go to Pose' : 'Upgrade to Pro',
+        },
+        {
+            name: "Elite",
+            price: "₹2999",
+            features: ["Everything in Pro", "1-on-1 virtual coaching", "Custom meal prep service", "Premium content access"],
+            active: "Coming Soon!"
+        },
     ];
 
     return (

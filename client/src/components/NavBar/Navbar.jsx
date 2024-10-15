@@ -1,31 +1,39 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaBars, FaDumbbell, FaTimes, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaBars, FaDumbbell, FaTimes, FaUser, FaCog, FaSignOutAlt, FaCaretDown } from 'react-icons/fa';
 import { signOutSuccess } from '../../redux/user/userSlice.js';
+import axios from 'axios';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isPlannerDropdownOpen, setIsPlannerDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const plannerDropdownRef = useRef(null);
 
     const user = useSelector((state) => state.user.user);
     const dispatch = useDispatch();
 
     const toggleNavbar = () => setIsOpen(!isOpen);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await axios.post('/api/v1/auth/signout');
         dispatch(signOutSuccess());
         setIsDropdownOpen(false);
     };
 
     const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+    const togglePlannerDropdown = () => setIsPlannerDropdownOpen(!isPlannerDropdownOpen);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsDropdownOpen(false);
+            }
+            if (plannerDropdownRef.current && !plannerDropdownRef.current.contains(event.target)) {
+                setIsPlannerDropdownOpen(false);
             }
         };
 
@@ -40,8 +48,13 @@ const Navbar = () => {
             { to: '/', label: 'Home' },
             { to: '/about', label: 'About' },
             { to: '/progress', label: 'Progress' },
-            { to: '/pose', label: 'Pose Estimation' }
-            
+            {
+                label: 'Planner',
+                dropdown: [
+                    { to: '/dietplanner', label: 'Diet Planner' },
+                    { to: '/exerciseplanner', label: 'Exercise' }
+                ]
+            },
         ]
         : [
             { to: '/', label: 'Home' },
@@ -60,16 +73,50 @@ const Navbar = () => {
 
                 <div className="hidden lg:flex space-x-6 items-center">
                     {navItems.map((item, index) => (
-                        <NavLink
-                            key={index}
-                            to={item.to}
-                            className={({ isActive }) =>
-                                `text-lg font-semibold ${isActive ? 'text-blue-400' : 'text-white'
-                                } hover:text-blue-300 transition-colors duration-300`
-                            }
-                        >
-                            {item.label}
-                        </NavLink>
+                        item.dropdown ? (
+                            <div key={index} className="relative" ref={plannerDropdownRef}>
+                                <button
+                                    onClick={togglePlannerDropdown}
+                                    className="text-lg font-semibold text-white hover:text-blue-300 transition-colors duration-300 flex items-center"
+                                >
+                                    {item.label}
+                                    <FaCaretDown className="ml-1" />
+                                </button>
+                                <AnimatePresence>
+                                    {isPlannerDropdownOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-10"
+                                        >
+                                            {item.dropdown.map((dropdownItem, dropdownIndex) => (
+                                                <Link
+                                                    key={dropdownIndex}
+                                                    to={dropdownItem.to}
+                                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                                                    onClick={() => setIsPlannerDropdownOpen(false)}
+                                                >
+                                                    {dropdownItem.label}
+                                                </Link>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        ) : (
+                            <NavLink
+                                key={index}
+                                to={item.to}
+                                className={({ isActive }) =>
+                                    `text-lg font-semibold ${isActive ? 'text-blue-400' : 'text-white'
+                                    } hover:text-blue-300 transition-colors duration-300`
+                                }
+                            >
+                                {item.label}
+                            </NavLink>
+                        )
                     ))}
                     {user && (
                         <div className="relative" ref={dropdownRef}>
@@ -96,11 +143,11 @@ const Navbar = () => {
                                             <p className="text-sm font-semibold text-gray-700">{user.name || 'User'}</p>
                                             <p className="text-xs text-gray-500">{user.email}</p>
                                         </div>
-                                        <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center">
+                                        <Link to="/profile" className="px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center">
                                             <FaUser className="mr-3 text-blue-500" />
                                             Your Profile
                                         </Link>
-                                        <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center">
+                                        <Link to="/settings" className="px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center">
                                             <FaCog className="mr-3 text-blue-500" />
                                             Settings
                                         </Link>
@@ -135,17 +182,35 @@ const Navbar = () => {
                     >
                         <div className="flex flex-col items-center justify-center h-full">
                             {navItems.map((item, index) => (
-                                <NavLink
-                                    key={index}
-                                    to={item.to}
-                                    onClick={toggleNavbar}
-                                    className={({ isActive }) =>
-                                        `text-2xl font-bold my-4 ${isActive ? 'text-blue-400' : 'text-white'
-                                        } hover:text-blue-300 transition-colors duration-300`
-                                    }
-                                >
-                                    {item.label}
-                                </NavLink>
+                                item.dropdown ? (
+                                    <React.Fragment key={index}>
+                                        {item.dropdown.map((dropdownItem, dropdownIndex) => (
+                                            <NavLink
+                                                key={`${index}-${dropdownIndex}`}
+                                                to={dropdownItem.to}
+                                                onClick={toggleNavbar}
+                                                className={({ isActive }) =>
+                                                    `text-2xl font-bold my-4 ${isActive ? 'text-blue-400' : 'text-white'
+                                                    } hover:text-blue-300 transition-colors duration-300`
+                                                }
+                                            >
+                                                {dropdownItem.label}
+                                            </NavLink>
+                                        ))}
+                                    </React.Fragment>
+                                ) : (
+                                    <NavLink
+                                        key={index}
+                                        to={item.to}
+                                        onClick={toggleNavbar}
+                                        className={({ isActive }) =>
+                                            `text-2xl font-bold my-4 ${isActive ? 'text-blue-400' : 'text-white'
+                                            } hover:text-blue-300 transition-colors duration-300`
+                                        }
+                                    >
+                                        {item.label}
+                                    </NavLink>
+                                )
                             ))}
                             {user && (
                                 <>
@@ -164,7 +229,10 @@ const Navbar = () => {
                                         Settings
                                     </NavLink>
                                     <button
-                                        onClick={handleLogout}
+                                        onClick={() => {
+                                            handleLogout();
+                                            toggleNavbar();
+                                        }}
                                         className="text-2xl font-bold my-4 text-white hover:text-blue-300 transition-colors duration-300"
                                     >
                                         Sign out

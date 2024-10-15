@@ -1,12 +1,10 @@
 /* eslint-disable react/prop-types */
-
 import { motion } from 'framer-motion';
 import { Camera, Utensils, Activity, Headphones, Clock, Zap, CheckCircle } from 'lucide-react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-
-
 
 const FeatureCard = ({ icon: Icon, title, description }) => (
   <motion.div
@@ -20,87 +18,60 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
   </motion.div>
 );
 
-
-
 const Pro = () => {
-
   const loggedInUser = useSelector((state) => state.user.user);
-
   const [error, setError] = useState(null);
 
-  const user = useSelector((state) => state.user.user);
-  function getKey() {
-    return axios.get('api/v1/payment/key');
-  }
-
+  const getKey = async () => {
+    try {
+      const { data } = await axios.get('api/v1/payment/key');
+      return data.key;
+    } catch (err) {
+      setError('Failed to fetch payment key');
+      throw err;
+    }
+  };
 
   const checkoutHandler = async () => {
     try {
       const { data } = await axios.post('api/v1/payment/checkout');
-      console.log(data);
-      console.log(window)
+      const key = await getKey(); 
+
       const options = {
-        key: getKey().then((res) => res.data.key),
+        key,
         amount: data.amount,
         currency: "INR",
         name: "FitVision Pro",
         description: "Upgrade to FitVision Pro",
-        image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fm.facebook.com%2FFitvisionapparel%2F&psig=AOvVaw07-sFd52yeD81o3PxVimoI&ust=1729066517458000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCID_ku74j4kDFQAAAAAdAAAAABAE",
+        image: "https://media.mobidev.biz/2020/07/2400-human-pose-estimation-ai-fitness.jpg",
         order_id: data.id,
         callback_url: "/api/v1/payment/verify",
         prefill: {
-          name: user.name,
-          email: user.email,
+          name: loggedInUser.name,
+          email: loggedInUser.email,
           contact: "9999999999"
         },
         notes: {
-          "address": "Razorpay Corporate Office"
+          address: "Razorpay Corporate Office"
         },
         theme: {
-          "color": "#121212"
+          color: "#121212"
         }
       };
       const razor = new window.Razorpay(options);
       razor.open();
-
     } catch (err) {
-      setError(err.response.data.message);
+      setError(err.response?.data?.message || 'Payment process failed');
     }
-
-  }
-
+  };
 
   const features = [
-    {
-      icon: Camera,
-      title: "Posture Tracking",
-      description: "Advanced AI-powered posture analysis to help you maintain proper form during workouts and daily activities."
-    },
-    {
-      icon: Utensils,
-      title: "Custom Nutrition Plans",
-      description: "Personalized meal plans tailored to your dietary preferences, allergies, and fitness goals."
-    },
-    {
-      icon: Activity,
-      title: "Custom Exercise Plans",
-      description: "Individualized workout routines designed to maximize your results based on your fitness level and goals."
-    },
-    {
-      icon: Headphones,
-      title: "24/7 Expert Guidance",
-      description: "Round-the-clock access to fitness experts and nutritionists for advice and motivation."
-    },
-    {
-      icon: Clock,
-      title: "Real-time Progress Tracking",
-      description: "Monitor your fitness journey with detailed analytics and progress reports."
-    },
-    {
-      icon: Zap,
-      title: "AI-Powered Recommendations",
-      description: "Get intelligent suggestions for workout adjustments and meal optimizations based on your progress."
-    }
+    { icon: Camera, title: "Posture Tracking", description: "Advanced AI-powered posture analysis to help you maintain proper form during workouts and daily activities." },
+    { icon: Utensils, title: "Custom Nutrition Plans", description: "Personalized meal plans tailored to your dietary preferences, allergies, and fitness goals." },
+    { icon: Activity, title: "Custom Exercise Plans", description: "Individualized workout routines designed to maximize your results based on your fitness level and goals." },
+    { icon: Headphones, title: "24/7 Expert Guidance", description: "Round-the-clock access to fitness experts and nutritionists for advice and motivation." },
+    { icon: Clock, title: "Real-time Progress Tracking", description: "Monitor your fitness journey with detailed analytics and progress reports." },
+    { icon: Zap, title: "AI-Powered Recommendations", description: "Get intelligent suggestions for workout adjustments and meal optimizations based on your progress." }
   ];
 
   return (
@@ -112,6 +83,10 @@ const Pro = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
+          <div className="bg-gradient-to-r from-red-500 via-red-400 to-red-500 text-white p-6 rounded-md shadow-md max-w-lg mx-auto mt-8">
+            <h1 className="text-xl font-semibold mb-2">Action Required</h1>
+            <p className="text-sm">If you just subscribed, please log in again to continue accessing.</p>
+          </div>
           <h1 className="text-5xl font-bold text-white mb-4">Upgrade to FitVision Pro</h1>
           <p className="text-xl text-blue-300">Unlock premium features and take your fitness journey to the next level</p>
         </motion.div>
@@ -146,21 +121,29 @@ const Pro = () => {
         </motion.div>
 
         <div className="mt-12 text-center">
-          <motion.button
-            disabled={loggedInUser?.pro ? true : false}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-indigo-600 text-white px-8 py-3 rounded-full text-xl font-bold shadow-lg hover:bg-indigo-700 transition duration-300"
-            onClick={checkoutHandler}
-          >
-            {loggedInUser?.pro ? 'Upgrade to Pro' : 'Currently subscribed to Pro'}
-          </motion.button>
+          {loggedInUser?.isPro ? (
+            <Link
+              to="/pose"
+              className="bg-indigo-600 text-white px-8 py-3 rounded-full text-xl font-bold shadow-lg hover:bg-indigo-700 transition duration-300 inline-block"
+            >
+              Currently Subscribed to Pro - Go to Pose
+            </Link>
+          ) : (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-indigo-600 text-white px-8 py-3 rounded-full text-xl font-bold shadow-lg hover:bg-indigo-700 transition duration-300"
+              onClick={checkoutHandler}
+            >
+              Upgrade to Pro
+            </motion.button>
+          )}
           {error && <p className="text-red-500 mt-4">{error}</p>}
         </div>
 
         <div className="mt-12 text-center">
           <img
-            src="https://media.mobidev.biz/2020/07/2400-human-pose-estimation-ai-fitness.jpg?strip=all&lossy=1&ssl=1"
+            src="https://media.mobidev.biz/2020/07/2400-human-pose-estimation-ai-fitness.jpg"
             alt="FitVision Pro Dashboard"
             className="rounded-xl shadow-2xl mx-auto"
           />
