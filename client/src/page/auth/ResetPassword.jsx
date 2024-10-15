@@ -15,7 +15,7 @@ const ResetPassword = () => {
     useEffect(() => {
         if (!token) {
             setError('Invalid reset link');
-            navigate('/login');
+            navigate('/signin');
         }
     }, [token, navigate]);
 

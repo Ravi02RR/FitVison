@@ -29,6 +29,14 @@ const userSchema = new schema({
         type: String,
         default: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG-5Wi8qZXluHi11q-AHGh8riznXRoltGVYQ&s'
     },
+    isPro: {
+        type: Boolean,
+        default: false
+    },
+    proExpirationDate: {
+        type: Date,
+        default: null
+    },
 
     resetPasswordToken: {
         type: String,

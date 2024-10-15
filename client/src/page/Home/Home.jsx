@@ -179,6 +179,7 @@ const FeaturesSection = () => {
 };
 
 const PricingSection = () => {
+    
     const plans = [
         { name: "Basic", price: "₹00", features: ["Personalized workout plans", "Basic meal suggestions", "Progress tracking"], to: '/progress' },
         { name: "Pro", price: "₹999", features: ["Everything in Basic", "Advanced posture analysis", "Nutritionist consultation", "24/7 support"], to: '/pro' },

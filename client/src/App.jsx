@@ -20,6 +20,9 @@ import AdminLog from './page/Admin/AdminLog';
 import Setting from './page/Settings/Setting';
 import Progress from './page/Progress/Progress';
 import Pro from './page/Plans/Pro';
+import Paymentsucess from './page/Plans/Paymentsucess';
+import ProRoute from './components/Private/ProRoute';
+import PoseEstimation from './page/PoseEstimation/PoseEstimation';
 
 function NotFound() {
   return (
@@ -70,11 +73,24 @@ function App() {
               </PublicRoute>
 
             } />
+
+          <Route path="/pose"
+            element={
+              <ProRoute user={user}>
+                <PoseEstimation />
+              </ProRoute>
+            }
+          />
+
+
+
           <Route path="/admin/log" element={<PrivateRoute element={AdminLog} />} />
           <Route path="/settings" element={<PrivateRoute element={Setting} />} />
           <Route path="/progress" element={<PrivateRoute element={Progress} />} />
+          <Route path="/paymentsuccess" element={<PrivateRoute element={Paymentsucess} />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/pro" element={<Pro />} />
+
         </Routes>
         <Footer />
       </BrowserRouter>

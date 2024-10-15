@@ -6,7 +6,8 @@ import { getProgress, addProgress } from '../controller/progress.controller.js';
 const progressRouter = Router();
 
 
-progressRouter.get('/', userAuthMiddleware, getProgress);
-progressRouter.post('/', userAuthMiddleware, addProgress);
+progressRouter.get('/', getProgress);
+progressRouter.post('/', addProgress);
+
 
 export default progressRouter;

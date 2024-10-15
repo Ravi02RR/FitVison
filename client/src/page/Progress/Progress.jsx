@@ -24,6 +24,7 @@ const Progress = () => {
         try {
             const response = await axios.get('/api/v1/progress');
             const { progress } = response.data;
+            console.log(progress);
             setProgressData(progress.entries);
             setStreak(progress.streak);
             setWeightLoss(parseFloat(progress.weightLossPercentage) || 0);

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { UserCircle, Mail, Key, Calendar, MapPin, Heart, Apple, Flag, Activity, Edit, User, Weight, Target, Utensils, AlertTriangle, Moon, Droplet, Coffee } from 'lucide-react';

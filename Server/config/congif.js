@@ -15,6 +15,10 @@ const config = {
         email: process.env.EMAIL_USER,
         password: process.env.EMAIL_PASS,
     },
+    razorpay: {
+        keyId: process.env.RAZORPAY_KEY_ID.toString(),
+        keySecret: process.env.RAZORPAY_KEY_SECRET.toString(),
+    }
 
 }
 

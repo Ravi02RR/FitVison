@@ -84,7 +84,8 @@ export const signin = async (req, res) => {
                     username: validUser.username,
                     email: validUser.email,
                     name: `${validUser.firstname} ${validUser.lastname}`,
-                    PhotoURL: validUser.photoURL
+                    PhotoURL: validUser.photoURL,
+                    isPro: validUser.isPro,
                 },
                 validUser
             });
