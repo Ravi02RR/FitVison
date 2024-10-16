@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import userAuthMiddleware from '../middleware/auth.middleware.js';
 
 import { getProgress, addProgress } from '../controller/progress.controller.js';
 

@@ -6,10 +6,12 @@ import userRouter from "./routes/user.routes.js";
 import authRouter from "./routes/auth.route.js";
 import userAuthMiddleware from "./middleware/auth.middleware.js";
 import logMiddleware from "./middleware/admin.log.middleware.js";
-import adminLogRouter from "./routes/admin.log.route.js";
+import adminUserRouter from "./routes/admin.user.route.js";
 import progressRouter from "./routes/progress.router.js";
 import paymentRouter from "./routes/razorpay.routes.js";
 import plannerRouter from "./routes/planner.routes.js";
+import { reqperuser, trackRequests } from "./routes/rePerUser.routes.js";
+import AdminProgressRouter from "./routes/progressReport.route.js";
 
 
 
@@ -18,14 +20,18 @@ app.get("/", userAuthMiddleware, (req, res) => {
         message: "Hello World"
     })
 });
-app.use(logMiddleware);
+app.use(trackRequests)
+// app.use(logMiddleware);
 //========= V1 Routes=========================
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/admin/log", adminLogRouter);
+app.use("/api/v1/admin/", adminUserRouter);
 app.use("/api/v1/progress", userAuthMiddleware, progressRouter);
 app.use("/api/v1/payment", userAuthMiddleware, paymentRouter);
-app.use("/api/v1/planner",userAuthMiddleware, plannerRouter);
+app.use("/api/v1/planner", userAuthMiddleware, plannerRouter);
+app.use("/api/v1/reqperuser",userAuthMiddleware, reqperuser);
+app.use("/api/v1/progressReport", userAuthMiddleware, AdminProgressRouter);
+
 
 //==================Error Middleware===================
 app.use(errorMiddleware);

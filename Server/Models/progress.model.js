@@ -18,7 +18,7 @@ const progressSchema = new mongoose.Schema({
             },
             height: {
                 type: Number,
-                required: true 
+                required: true
             },
             BMI: {
                 type: Number,
