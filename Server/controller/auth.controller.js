@@ -8,19 +8,41 @@ import nodemailer from 'nodemailer';
 
 //============================Signup============================
 
+
 const signupSchema = z.object({
-    username: z.string().min(3).max(30),
-    firstname: z.string().min(2).max(50),
-    lastname: z.string().min(2).max(50),
-    email: z.string().email(),
-    password: z.string().min(6).max(100),
+    username: z.string()
+        .min(3, "Username should be at least 3 characters long")
+        .max(30, "Username should not be more than 30 characters long")
+    ,
+
+    firstname: z.string()
+        .min(2, "First name should be at least 2 characters long")
+        .max(50, "First name should not be more than 50 characters long")
+        .regex(/^[^\d].*$/, "First name should not start with a number")
+        .regex(/^[a-zA-Z]+$/, "First name should not contain any numbers"),
+
+    lastname: z.string()
+        .min(2, "Last name should be at least 2 characters long")
+        .max(50, "Last name should not be more than 50 characters long")
+        .regex(/^[^\d].*$/, "Last name should not start with a number")
+        .regex(/^[a-zA-Z]+$/, "Last name should not contain any numbers"),
+
+    email: z.string()
+        .email("Invalid email address"),
+
+    password: z.string()
+        .min(6, "Password should be at least 6 characters long")
+        .max(100, "Password should not be more than 100 characters long"),
+
     photoURL: z.string().optional()
 });
+
 
 export const signup = async (req, res) => {
     try {
 
         const validatedData = signupSchema.parse(req.body);
+
         const existingUser = await UserModel.findOne({
             $or: [{ email: validatedData.email }, { username: validatedData.username }]
         });
@@ -47,7 +69,16 @@ export const signup = async (req, res) => {
 
     } catch (error) {
         if (error instanceof z.ZodError) {
-            return res.status(400).json({ message: "Invalid input", errors: error.errors });
+            const errorMessages = error.errors.map(err => ({
+                field: err.path.join('.'),
+                message: err.message
+            }));
+
+            console.log(JSON.stringify(errorMessages, null, 2));
+            return res.status(400).json({
+                message: errorMessages[0].message,
+                errors: errorMessages
+            });
         }
         console.error("Signup error:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -217,7 +248,7 @@ export const forgetPassword = async (req, res) => {
         console.log(user);
 
         const mailOptions = {
-            from: config.nodemailer.email,
+            from: '"noreply@fitVision.com" <your_actual_email@gmail.com>',
             to: user.email,
             subject: 'Password Reset Request - Fit Vision',
             html: `

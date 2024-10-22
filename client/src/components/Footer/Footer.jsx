@@ -1,18 +1,35 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
 
-    console.log('Email submitted:', email);
-    setEmail('');
+    try {
+      const response = await axios.post('/api/v1/subs', { email });
+      console.log(response)
+      setMessage('Successfully subscribed!');
+      setEmail('');
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage('An error occurred. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-blue-900 text-gray-300">
-      <div className=" mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-8 md:py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="col-span-1 md:col-span-2">
@@ -66,10 +83,16 @@ const Footer = () => {
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={isLoading}
                 >
-                  Subscribe
+                  {isLoading ? 'Subscribing...' : 'Subscribe'}
                 </button>
               </form>
+              {message && (
+                <p className={`mt-2 text-sm ${message.includes('Successfully') ? 'text-green-400' : 'text-red-400'}`}>
+                  {message}
+                </p>
+              )}
             </div>
           </div>
         </div>

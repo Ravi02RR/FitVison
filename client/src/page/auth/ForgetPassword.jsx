@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const inputRef = useRef(null)
+    useEffect(() => inputRef.current.focus(), [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,7 +31,7 @@ const ForgetPassword = () => {
             } else {
                 setError(data.message || 'An error occurred. Please try again.');
             }
-        // eslint-disable-next-line no-unused-vars
+            // eslint-disable-next-line no-unused-vars
         } catch (err) {
             setError('An error occurred. Please try again.');
         } finally {
@@ -54,7 +57,8 @@ const ForgetPassword = () => {
                                 Email address
                             </label>
                             <input
-                                id="email"
+                                ref={inputRef}
+                                id="emrail"
                                 name="email"
                                 type="email"
                                 autoComplete="email"

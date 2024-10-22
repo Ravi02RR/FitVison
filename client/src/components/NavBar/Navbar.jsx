@@ -48,6 +48,7 @@ const Navbar = () => {
             { to: '/', label: 'Home' },
             { to: '/about', label: 'About' },
             { to: '/progress', label: 'Progress' },
+            {to:'/pose',label:'Pose Tracker'},
             {
                 label: 'Planner',
                 dropdown: [

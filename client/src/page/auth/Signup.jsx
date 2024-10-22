@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,7 +20,11 @@ const Signup = () => {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+    const inputRef = useRef(null)
+    useEffect(() => {
+        inputRef.current.focus()
 
+    }, [])
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -60,6 +64,7 @@ const Signup = () => {
                         <div className="mb-4">
                             <label htmlFor="username" className="sr-only">Username</label>
                             <input
+                                ref={inputRef}
                                 id="username"
                                 name="username"
                                 type="text"
@@ -135,9 +140,9 @@ const Signup = () => {
                             {loading ? 'Loading...' : 'Sign up'}
                         </button>
                     </div>
-                    
+
                 </form>
-                
+
                 <Oauth />
                 <div>
                     <p className="text-center text-sm text-gray-400">

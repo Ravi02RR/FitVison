@@ -1,11 +1,12 @@
 import { lazy, Suspense } from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // Components
 import Navbar from './components/NavBar/Navbar';
 import Footer from './components/Footer/Footer';
+import ErrorBoundry from './ErrorHandler/ErrorBoundry';
 const PrivateRoute = lazy(() => import('./components/Private/PrivateRoute'));
 const PublicRoute = lazy(() => import('./components/Private/PublicRoute'));
 const ProRoute = lazy(() => import('./components/Private/ProRoute'));
@@ -27,7 +28,9 @@ const PoseEstimation = lazy(() => import('./page/PoseEstimation/PoseEstimation')
 const DietPlanner = lazy(() => import('./page/exerciseanddietplanner/DietPlanner'));
 const ExercisePlanner = lazy(() => import('./page/exerciseanddietplanner/ExercisePlanner'));
 const ReqPerUser = lazy(() => import('./page/Admin/ReqPerUser'));
-const ProgressReport= lazy(() => import('./page/Admin/ProgressReport'));
+const ProgressReport = lazy(() => import('./page/Admin/ProgressReport'));
+const SendMassMail = lazy(() => import('./page/Admin/SendMassMail'));
+const AdminNavBar = lazy(() => import('./page/Admin/AdminNav'));
 
 function NotFound() {
   return (
@@ -45,73 +48,86 @@ function LoadingFallback() {
   );
 }
 
+const AdminLayout = () => (
+  <>
+    <div className='min-h-screen bg-gradient-to-b from-gray-900 to-blue-900 '>
+      <AdminNavBar />
+      <Outlet />
+    </div>
+  </>
+);
+
 function App() {
   const { user } = useSelector((state) => state.user);
 
   return (
-    <>
-      <BrowserRouter>
-        <Navbar />
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route
-              path="/signin"
-              element={
-                <PublicRoute user={user}>
-                  <Signin />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <PublicRoute user={user}>
-                  <Signup />
-                </PublicRoute>
-              }
-            />
-            <Route path="/profile" element={<PrivateRoute element={Profile} />} />
-            <Route
-              path="/forget-password"
-              element={
-                <PublicRoute user={user}>
-                  <ForgetPassword />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/reset-password/:token"
-              element={
-                <PublicRoute user={user}>
-                  <ResetPassword />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/pose"
-              element={
-                <ProRoute user={user}>
-                  <PoseEstimation />
-                </ProRoute>
-              }
-            />
-            <Route path="/admin/log" element={<PrivateRoute element={AdminLog} />} />
-            <Route path="/admin/reqperuser" element={<PrivateRoute element={ReqPerUser} />} />
-            <Route path="/settings" element={<PrivateRoute element={Setting} />} />
-            <Route path="/progress" element={<PrivateRoute element={Progress} />} />
-            <Route path="/admin/progressreport" element={<PrivateRoute element={ProgressReport} />} />
-            <Route path="/dietplanner" element={<PrivateRoute element={DietPlanner} />} />
-            <Route path="/paymentsuccess" element={<PrivateRoute element={Paymentsucess} />} />
-            <Route path="/exerciseplanner" element={<PrivateRoute element={ExercisePlanner} />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/pro" element={<Pro />} />
-          </Routes>
-        </Suspense>
-        <Footer />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Navbar />
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route
+            path="/signin"
+            element={
+              <PublicRoute user={user}>
+                <Signin />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute user={user}>
+                <Signup />
+              </PublicRoute>
+            }
+          />
+          <Route path="/profile" element={<PrivateRoute element={Profile} />} />
+          <Route
+            path="/forget-password"
+            element={
+              <PublicRoute user={user}>
+                <ForgetPassword />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            element={
+              <PublicRoute user={user}>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/pose"
+            element={
+              <ProRoute user={user}>
+                <PoseEstimation />
+              </ProRoute>
+            }
+          />
+          <Route path="/settings" element={<PrivateRoute element={Setting} />} />
+          <Route path="/progress" element={<PrivateRoute element={Progress} />} />
+          <Route path="/dietplanner" element={<PrivateRoute element={DietPlanner} />} />
+          <Route path="/paymentsuccess" element={<PrivateRoute element={Paymentsucess} />} />
+          <Route path="/exerciseplanner" element={<PrivateRoute element={ExercisePlanner} />} />
+          <Route path="/pro" element={<Pro />} />
+
+          {/* Admin routes */}
+          <Route path="/admin" element={<PrivateRoute element={AdminLayout} />}>
+            <Route path="log" element={<ErrorBoundry><AdminLog /></ErrorBoundry>} />
+            <Route path="reqperuser" element={<ReqPerUser />} />
+            <Route path="progressreport" element={<ProgressReport />} />
+            <Route path="massmail" element={<ErrorBoundry><SendMassMail /></ErrorBoundry>} />
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      <Footer />
+    </BrowserRouter>
   );
 }
 

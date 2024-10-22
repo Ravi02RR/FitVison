@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { signInStart, signInSuccess, signInFail } from '../../redux/user/userSli
 import Oauth from '../../components/oAuth/Oauth';
 
 const Signin = () => {
+  const inputRef = useRef(null)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.user);
@@ -21,6 +22,10 @@ const Signin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    inputRef.current.focus()
+
+  }, [])
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess('');
@@ -54,6 +59,7 @@ const Signin = () => {
             <div className="mb-4">
               <label htmlFor="email-address" className="sr-only">Email address</label>
               <input
+                ref={inputRef}
                 id="email-address"
                 name="email"
                 type="email"

@@ -76,7 +76,7 @@ export const verifyPayment = async (req, res) => {
 
 
             const mailOptions = {
-                from: email,
+                from: '"noreply@fitVision.com" <your_actual_email@gmail.com>',
                 to: user.email,
                 subject: 'Fit Vision Subscription Confirmation',
                 html: `

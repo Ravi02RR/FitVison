@@ -142,12 +142,12 @@ const AdminLog = () => {
 
     return (
         <div className="container mx-auto p-4 min-h-screen ">
-            <h1 className="text-2xl font-bold mb-4">User Management</h1>
+            <h1 className="text-2xl font-bold mb-4 text-white">User Management</h1>
 
             {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
 
             <div className="mb-4 flex items-center">
-                <Search className="mr-2" />
+                <Search className="mr-2 text-white" />
                 <input
                     type="text"
                     placeholder="Search users..."

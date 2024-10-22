@@ -84,7 +84,7 @@ const BeautifulProfile = () => {
                                 <ProfileCard icon={Heart} label="Stress Level" value={localData.stressLevel} color="text-pink-400" />
                                 <ProfileCard icon={Droplet} label="Water Intake" value={`${localData.waterIntake} L`} color="text-blue-400" />
                                 <ProfileCard icon={Coffee} label="Meal Frequency" value={localData.mealFrequency} color="text-brown-400" />
-                                ]
+                                
                             </>
                         )}
                     </div>

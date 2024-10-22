@@ -12,6 +12,7 @@ import paymentRouter from "./routes/razorpay.routes.js";
 import plannerRouter from "./routes/planner.routes.js";
 import { reqperuser, trackRequests } from "./routes/rePerUser.routes.js";
 import AdminProgressRouter from "./routes/progressReport.route.js";
+import SubscribedRoute from './routes/subscribed.route.js'
 
 
 
@@ -29,8 +30,9 @@ app.use("/api/v1/admin/", adminUserRouter);
 app.use("/api/v1/progress", userAuthMiddleware, progressRouter);
 app.use("/api/v1/payment", userAuthMiddleware, paymentRouter);
 app.use("/api/v1/planner", userAuthMiddleware, plannerRouter);
-app.use("/api/v1/reqperuser",userAuthMiddleware, reqperuser);
+app.use("/api/v1/reqperuser", userAuthMiddleware, reqperuser);
 app.use("/api/v1/progressReport", userAuthMiddleware, AdminProgressRouter);
+app.use("/api/v1/subs", SubscribedRoute);
 
 
 //==================Error Middleware===================
