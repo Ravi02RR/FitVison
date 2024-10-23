@@ -21,6 +21,9 @@ const config = {
     },
     Groq: {
         apikey: process.env.GROQ_API_KEY,
+    },
+    GenAI: {
+        apikey: process.env.GOOGLE_AI_API_KEY
     }
 
 }

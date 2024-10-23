@@ -49,11 +49,13 @@ const Navbar = () => {
             { to: '/about', label: 'About' },
             { to: '/progress', label: 'Progress' },
             {to:'/pose',label:'Pose Tracker'},
+
             {
                 label: 'Planner',
                 dropdown: [
                     { to: '/dietplanner', label: 'Diet Planner' },
-                    { to: '/exerciseplanner', label: 'Exercise' }
+                    { to: '/exerciseplanner', label: 'Exercise' },
+                    { to: '/foodanalysis', label: 'NutriScan' },
                 ]
             },
         ]

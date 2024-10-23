@@ -31,6 +31,7 @@ const ReqPerUser = lazy(() => import('./page/Admin/ReqPerUser'));
 const ProgressReport = lazy(() => import('./page/Admin/ProgressReport'));
 const SendMassMail = lazy(() => import('./page/Admin/SendMassMail'));
 const AdminNavBar = lazy(() => import('./page/Admin/AdminNav'));
+const NutritionAnalysis = lazy(() => import('./page/SuperUser/NutritionAnalysis'))
 
 function NotFound() {
   return (
@@ -105,6 +106,14 @@ function App() {
             element={
               <ProRoute user={user}>
                 <PoseEstimation />
+              </ProRoute>
+            }
+          />
+          <Route
+            path="/foodanalysis"
+            element={
+              <ProRoute user={user}>
+                <NutritionAnalysis />
               </ProRoute>
             }
           />
