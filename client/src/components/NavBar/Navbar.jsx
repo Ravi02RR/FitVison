@@ -5,16 +5,43 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaDumbbell, FaTimes, FaUser, FaCog, FaSignOutAlt, FaCaretDown } from 'react-icons/fa';
 import { signOutSuccess } from '../../redux/user/userSlice.js';
 import axios from 'axios';
+import Tour from 'reactour';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isPlannerDropdownOpen, setIsPlannerDropdownOpen] = useState(false);
+    const [isTourOpen, setIsTourOpen] = useState(false);
     const dropdownRef = useRef(null);
     const plannerDropdownRef = useRef(null);
 
     const user = useSelector((state) => state.user.user);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const hasSeenTour = localStorage.getItem('hasSeenProfileTour');
+        if (user && !hasSeenTour) {
+            setIsTourOpen(true);
+        }
+    }, [user]);
+
+    const closeTour = () => {
+        setIsTourOpen(false);
+        localStorage.setItem('hasSeenProfileTour', 'true');
+    };
+
+    const steps = [
+        {
+            selector: '.profile-button',
+            content: 'Welcome to FitVision! Click here to access your profile settings. In the settings, make sure to fill in your personal details such as height, weight, and fitness goals. This data will be saved locally to provide you with a personalized experience and the most accurate progress tracking.',
+        }
+    ];
+    
+
+    const tourConfig = {
+        rounded: 8,
+        accentColor: '#3B82F6',
+    };
 
     const toggleNavbar = () => setIsOpen(!isOpen);
 
@@ -48,8 +75,7 @@ const Navbar = () => {
             { to: '/', label: 'Home' },
             { to: '/about', label: 'About' },
             { to: '/progress', label: 'Progress' },
-            {to:'/pose',label:'Pose Tracker'},
-
+            { to: '/pose', label: 'Pose Tracker' },
             {
                 label: 'Planner',
                 dropdown: [
@@ -125,7 +151,7 @@ const Navbar = () => {
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={toggleDropdown}
-                                className="w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                className="profile-button w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-300"
                             >
                                 {user.photoURL ? (
                                     <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
@@ -140,7 +166,7 @@ const Navbar = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -10 }}
                                         transition={{ duration: 0.2 }}
-                                        className="absolute right-0 mt-3 w-64 bg-white rounded-lg shadow-xl py-2 z-10"
+                                        className="profile-dropdown absolute right-0 mt-3 w-64 bg-white rounded-lg shadow-xl py-2 z-10"
                                     >
                                         <div className="px-4 py-3 border-b border-gray-200">
                                             <p className="text-sm font-semibold text-gray-700">{user.name || 'User'}</p>
@@ -150,7 +176,7 @@ const Navbar = () => {
                                             <FaUser className="mr-3 text-blue-500" />
                                             Your Profile
                                         </Link>
-                                        <Link to="/settings" className="px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center">
+                                        <Link to="/settings" className="settings-link px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center">
                                             <FaCog className="mr-3 text-blue-500" />
                                             Settings
                                         </Link>
@@ -246,6 +272,13 @@ const Navbar = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <Tour
+                steps={steps}
+                isOpen={isTourOpen}
+                onRequestClose={closeTour}
+                {...tourConfig}
+            />
         </nav>
     );
 };

@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Fullscreen, Minimize2 } from 'lucide-react';
+import axios from 'axios';
 
 const PoseEstimation = () => {
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const toggleFullscreen = () => {
         const element = document.documentElement;
-        
+
         if (!isFullscreen) {
             if (element.requestFullscreen) {
                 element.requestFullscreen();
@@ -18,6 +19,21 @@ const PoseEstimation = () => {
         }
         setIsFullscreen(!isFullscreen);
     };
+    const [link, setLink] = useState()
+    const getLink = async () => {
+        const res = await axios.get('/api/v2/posemodel')
+        return res.data.data
+
+    }
+
+    useEffect(() => {
+        let linktoEmbed = getLink().then((res)=>{
+            setLink(res)
+        })
+        console.log(linktoEmbed)
+        setLink()
+
+    }, [])
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900">
@@ -25,7 +41,7 @@ const PoseEstimation = () => {
                 <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
                     <div className="flex justify-between items-center p-4 bg-gray-700">
                         <h1 className="text-xl font-bold text-white">Pose Estimation</h1>
-                        <button 
+                        <button
                             onClick={toggleFullscreen}
                             className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors duration-200 text-white flex items-center gap-2"
                         >
@@ -42,10 +58,10 @@ const PoseEstimation = () => {
                             )}
                         </button>
                     </div>
-                    
+
                     <div className={`relative ${isFullscreen ? 'h-screen' : 'h-[80vh]'} w-full`}>
                         <iframe
-                            src="http://localhost:8080/"
+                            src={link}
                             className="absolute top-0 left-0 w-full h-full border-0"
                             allow="camera;microphone;fullscreen"
                             title="Pose Estimation"

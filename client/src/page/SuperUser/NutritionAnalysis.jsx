@@ -61,9 +61,19 @@ const NutritionAnalysis = () => {
 
             const formData = new FormData();
             formData.append('foodImage', file);
+            console.log(formData)
 
-            const res = await axios.post('/api/v1/foodnutrition/getfooddetail', formData);
+
+
+
+
+            //const res = await axios.post('/api/v1/foodnutrition/getfooddetail', formData);
+            const res = await axios.post('/api/v2/foodnutrition/getfooddetail', formData);
+            //const res = await axios.post('http://localhost:8787/', formData);
+            //const res = await axios.post('https://honoservernutiscan.ravi848101mnb.workers.dev/', formData);
+            console.log(res)
             setData(res.data);
+            console.log(res)
         } catch (err) {
             setError('Failed to analyze image. Please try again.');
         } finally {

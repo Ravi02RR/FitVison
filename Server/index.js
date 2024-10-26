@@ -15,6 +15,10 @@ import { reqperuser, trackRequests } from "./routes/rePerUser.routes.js";
 import AdminProgressRouter from "./routes/progressReport.route.js";
 import SubscribedRoute from './routes/subscribed.route.js'
 import nutritionRouter from "./routes/nutrition.route.js";
+import v2HonoRoute from "./routes/nutiScanhono.route.js";
+import v2EmbededLinkRouter from "./routes/v2.getEmbedLink.route.js";
+
+
 
 
 
@@ -34,9 +38,12 @@ app.use("/api/v1/payment", userAuthMiddleware, paymentRouter);
 app.use("/api/v1/planner", userAuthMiddleware, plannerRouter);
 app.use("/api/v1/reqperuser", userAuthMiddleware, reqperuser);
 app.use("/api/v1/progressReport", userAuthMiddleware, AdminProgressRouter);
-app.use("/api/v1/foodnutrition", userAuthMiddleware,nutritionRouter)
+app.use("/api/v1/foodnutrition", userAuthMiddleware, nutritionRouter)
 app.use("/api/v1/subs", SubscribedRoute);
 
+//======================v2Routes============================
+app.use("/api/v2/foodnutrition", userAuthMiddleware, v2HonoRoute)
+app.use("/api/v2/posemodel", v2EmbededLinkRouter)
 
 //==================Error Middleware===================
 // app.use(reqMiddleware);

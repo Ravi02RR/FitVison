@@ -24,6 +24,11 @@ const config = {
     },
     GenAI: {
         apikey: process.env.GOOGLE_AI_API_KEY
+    },
+    WorkerLink: {
+        nuriScan: process.env.HONO_SERVER_URL
+    }, EmbadedLink: {
+        uri: process.env.EMBEDED_LINK
     }
 
 }
